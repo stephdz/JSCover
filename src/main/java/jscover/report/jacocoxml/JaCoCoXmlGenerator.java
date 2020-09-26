@@ -340,24 +340,51 @@ library.  If this is what you want to do, use the GNU Lesser General
 Public License instead of this License.
  */
 
-package jscover.util;
+package jscover.report.jacocoxml;
 
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
+import jscover.report.coberturaxml.CoberturaData;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
-import java.io.InputStream;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.StringWriter;
 
-public class LocalEntityResolver implements EntityResolver {
-    public InputSource resolveEntity(String publicId, String systemId) {
-        int nameStart = systemId.lastIndexOf('/');
-        String file = systemId.substring(nameStart + 1);
-        String path;
-        if ("-//JACOCO//DTD Report 1.1//EN".equals(publicId)) {
-            path = "/jscover/report/jacocoxml/";
-        } else {
-            path = "/jscover/report/coberturaxml/";
+public class JaCoCoXmlGenerator {
+    public String generateXml(CoberturaData data, String sourceDir, String version) {
+        try {
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            Document doc = documentBuilder.newDocument();
+
+            Element coverageElement = doc.createElement("report");
+            coverageElement.setAttribute("name", "JSCover JaCoCo XML - " + data.getUri());
+            doc.appendChild(coverageElement);
+
+            return getXmlString(doc);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        InputStream is = getClass().getResourceAsStream(path + file);
-        return new InputSource(is);
+    }
+
+
+    private String getXmlString(Document doc) throws TransformerException {
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer transformer = tf.newTransformer();
+        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", Integer.toString(2));
+        transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "report.dtd");
+        //transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        StringWriter writer = new StringWriter();
+        DOMSource xmlSource = new DOMSource(doc.getDocumentElement());
+        transformer.transform(xmlSource, new StreamResult(writer));
+        return writer.getBuffer().toString();
     }
 }
