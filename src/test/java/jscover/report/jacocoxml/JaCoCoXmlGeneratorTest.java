@@ -1,7 +1,7 @@
 package jscover.report.jacocoxml;
 
 import jscover.report.Coverable;
-import jscover.report.coberturaxml.CoberturaData;
+import jscover.report.CoverageData;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
@@ -18,7 +18,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class JaCoCoXmlGeneratorTest {
     private JaCoCoXmlGenerator generator = new JaCoCoXmlGenerator();
     Collection<Coverable> files = new HashSet<>();
-    CoberturaData data = new CoberturaData(files);
+    CoverageData data = new CoverageData(files);
 
     @Test(expected = RuntimeException.class)
     public void shouldWrapException() {

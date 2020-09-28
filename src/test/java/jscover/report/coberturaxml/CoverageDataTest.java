@@ -343,38 +343,68 @@ Public License instead of this License.
 package jscover.report.coberturaxml;
 
 import jscover.report.Coverable;
-import jscover.report.SummaryData;
+import jscover.report.CoverageData;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class CoberturaData extends SummaryData {
-    private Map<String, Set<? extends Coverable>> packageMap = new HashMap<>();
-    private Collection<? extends Coverable> files;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.BDDMockito.given;
 
-    @SuppressWarnings(value = "unchecked")
-    public CoberturaData(Collection<? extends Coverable> files) {
-        super(files);
-        this.files = files;
-        for (Coverable file : files) {
-            String path = getPackage(file.getUri());
-            if (!packageMap.containsKey(path)) {
-                packageMap.put(path, new HashSet<>());
-            }
-            ((Set<Coverable>)packageMap.get(path)).add(file);
-        }
+@RunWith(MockitoJUnitRunner.class)
+public class CoverageDataTest {
+    @Mock Coverable fileData1;
+    @Mock Coverable fileData2;
+
+    @Test
+    public void shouldExtractPackage() {
+        CoverageData data = new CoverageData(new ArrayList<>());
+
+        assertThat(data.getPackage(null), equalTo(""));
+        assertThat(data.getPackage("test.js"), equalTo(""));
+        assertThat(data.getPackage("/test.js"), equalTo(""));
+        assertThat(data.getPackage("/level1/test.js"), equalTo("/level1"));
+        assertThat(data.getPackage("/level1/level2/test.js"), equalTo("/level1/level2"));
     }
 
-    protected String getPackage(String uri) {
-        if (uri == null || !uri.contains("/"))
-            return "";
-        return uri.substring(0, uri.lastIndexOf("/"));
+    @Test
+    public void shouldAddLineStatistics() {
+        given(fileData1.getCodeLineCount()).willReturn(4);
+        given(fileData1.getCodeLinesCoveredCount()).willReturn(2);
+        given(fileData2.getCodeLineCount()).willReturn(6);
+        given(fileData2.getCodeLinesCoveredCount()).willReturn(5);
+
+        List<Coverable> files = new ArrayList<>();
+        files.add(fileData1);
+        files.add(fileData2);
+
+        CoverageData data = new CoverageData(files);
+
+        assertThat(data.getCodeLineCount(), equalTo(10));
+        assertThat(data.getCodeLinesCoveredCount(), equalTo(7));
+        assertThat(data.getLineCoverRate(), equalTo((double)7/10));
     }
 
-    public Collection<? extends Coverable> getFiles() {
-        return files;
-    }
+    @Test
+    public void shouldAddBranchStatistics() {
+        given(fileData1.getBranchCount()).willReturn(4);
+        given(fileData1.getBranchesCoveredCount()).willReturn(2);
+        given(fileData2.getBranchCount()).willReturn(6);
+        given(fileData2.getBranchesCoveredCount()).willReturn(5);
 
-    public Map<String, Set<? extends Coverable>> getPackageMap() {
-        return packageMap;
+        List<Coverable> files = new ArrayList<>();
+        files.add(fileData1);
+        files.add(fileData2);
+
+        CoverageData data = new CoverageData(files);
+
+        assertThat(data.getBranchCount(), equalTo(10));
+        assertThat(data.getBranchesCoveredCount(), equalTo(7));
+        assertThat(data.getBranchRate(), equalTo((double)7/10));
     }
 }

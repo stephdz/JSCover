@@ -342,6 +342,7 @@ Public License instead of this License.
 
 package jscover.report.coberturaxml;
 
+import jscover.report.CoverageData;
 import jscover.report.JSONDataMerger;
 import jscover.util.IoUtils;
 import org.junit.Test;
@@ -400,7 +401,7 @@ public class CoberturaXmlGeneratorIntegrationTest {
     @Test
     public void shouldGenerateXml() throws Exception {
         String json = IoUtils.getInstance().loadFromFileSystem(new File("src/test-integration/resources/jscover/report/xml/jscoverage.json"));
-        CoberturaData data = new CoberturaData(jsonDataMerger.jsonToMap(json).values());
+        CoverageData data = new CoverageData(jsonDataMerger.jsonToMap(json).values());
         String xml = xmlGenerator.generateXml(data, "c:\\sourceDir", "theVersion");
         Document document = parseXml(xml);
         XPath xpath = XPathFactory.newInstance().newXPath();

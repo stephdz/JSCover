@@ -344,6 +344,7 @@ package jscover.report.coberturaxml;
 
 import jscover.report.BranchData;
 import jscover.report.Coverable;
+import jscover.report.CoverageData;
 import jscover.report.FileData;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -363,7 +364,7 @@ import static org.mockito.Mockito.mock;
 public class CoberturaXmlGeneratorTest {
     private CoberturaXmlGenerator generator = new CoberturaXmlGenerator();
     Collection<Coverable> files = new HashSet<>();
-    CoberturaData data = new CoberturaData(files);
+    CoverageData data = new CoverageData(files);
 
     @Test(expected = RuntimeException.class)
     public void shouldWrapException() {
@@ -393,7 +394,7 @@ public class CoberturaXmlGeneratorTest {
         given(coverable.getBranchesCoveredCount()).willReturn(2);
         given(coverable.getBranchRate()).willReturn(.4d);
 
-        data = new CoberturaData(files);
+        data = new CoverageData(files);
         String xml = generator.generateXml(data, "srcDir", "version");
         //System.out.println("xml = " + xml);
 
@@ -445,7 +446,7 @@ public class CoberturaXmlGeneratorTest {
         given(coverable2.getBranchesCoveredCount()).willReturn(5);
         given(coverable2.getBranchRate()).willReturn(1d);
 
-        data = new CoberturaData(files);
+        data = new CoverageData(files);
         String xml = generator.generateXml(data, "srcDir", "version");
         //System.out.println("xml = " + xml);
 
@@ -473,7 +474,7 @@ public class CoberturaXmlGeneratorTest {
         SortedMap<Integer, List<BranchData>> branchData = new TreeMap<>();
         files.add(new FileData("/dir/file.js", lines, null, branchData));
 
-        data = new CoberturaData(files);
+        data = new CoverageData(files);
         String xml = generator.generateXml(data, "srcDir", "version");
         //System.out.println("xml = " + xml);
 
@@ -495,7 +496,7 @@ public class CoberturaXmlGeneratorTest {
         branchDataMap.put(1, conditionsList);
         files.add(new FileData("/dir/file.js", lines, null, branchDataMap));
 
-        data = new CoberturaData(files);
+        data = new CoverageData(files);
         String xml = generator.generateXml(data, "srcDir", "version");
         //System.out.println("xml = " + xml);
 
@@ -523,7 +524,7 @@ public class CoberturaXmlGeneratorTest {
         branchDataMap.put(1, conditionsList);
         files.add(new FileData("/dir/file.js", lines, null, branchDataMap));
 
-        data = new CoberturaData(files);
+        data = new CoverageData(files);
         String xml = generator.generateXml(data, "srcDir", "version");
         //System.out.println("xml = " + xml);
 
@@ -551,7 +552,7 @@ public class CoberturaXmlGeneratorTest {
         branchDataMap.put(1, conditionsList);
         files.add(new FileData("/dir/file.js", lines, null, branchDataMap));
 
-        data = new CoberturaData(files);
+        data = new CoverageData(files);
         String xml = generator.generateXml(data, "srcDir", "version");
         //System.out.println("xml = " + xml);
 

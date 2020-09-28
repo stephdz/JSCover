@@ -343,7 +343,6 @@ Public License instead of this License.
 package jscover.report;
 
 import jscover.ExitHelper;
-import jscover.report.coberturaxml.CoberturaData;
 import jscover.report.coberturaxml.CoberturaXmlGenerator;
 import jscover.report.lcov.LCovGenerator;
 import jscover.report.xml.XMLSummary;
@@ -462,7 +461,7 @@ public class Main {
 
     public void saveCoberturaXml() {
         String json = ioUtils.loadFromFileSystem(new File(config.getJsonDirectory(), "jscoverage.json"));
-        String xml = coberturaXmlGenerator.generateXml(new CoberturaData(jsonDataMerger.jsonToMap(json).values()), ioUtils.getCanonicalPath(config.getSourceDirectory()), config.getVersion());
+        String xml = coberturaXmlGenerator.generateXml(new CoverageData(jsonDataMerger.jsonToMap(json).values()), ioUtils.getCanonicalPath(config.getSourceDirectory()), config.getVersion());
         File dest = new File(config.getJsonDirectory(), "cobertura-coverage.xml");
         ioUtils.copy(xml, dest);
     }

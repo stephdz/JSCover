@@ -342,10 +342,7 @@ Public License instead of this License.
 
 package jscover.report.coberturaxml;
 
-import jscover.report.BranchData;
-import jscover.report.Coverable;
-import jscover.report.FileData;
-import jscover.report.SummaryData;
+import jscover.report.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -366,7 +363,7 @@ import java.util.Set;
 import static java.lang.String.format;
 
 public class CoberturaXmlGenerator {
-    public String generateXml(CoberturaData data, String sourceDir, String version) {
+    public String generateXml(CoverageData data, String sourceDir, String version) {
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -405,7 +402,7 @@ public class CoberturaXmlGenerator {
         root.setAttribute("timestamp", "" + new Date().getTime());
     }
 
-    private void addPackages(CoberturaData data, Document doc, Element packages) {
+    private void addPackages(CoverageData data, Document doc, Element packages) {
         for (String path : data.getPackageMap().keySet()) {
             Element packageElement = doc.createElement("package");
             packages.appendChild(packageElement);

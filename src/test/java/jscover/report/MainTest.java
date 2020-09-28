@@ -343,7 +343,6 @@ Public License instead of this License.
 package jscover.report;
 
 import jscover.ExitHelper;
-import jscover.report.coberturaxml.CoberturaData;
 import jscover.report.coberturaxml.CoberturaXmlGenerator;
 import jscover.report.lcov.LCovGenerator;
 import jscover.report.xml.XMLSummary;
@@ -467,9 +466,9 @@ public class MainTest {
 
         main.runMain(new String[]{});
 
-        TypeSafeMatcher<CoberturaData> coberturaDataMatcher = new TypeSafeMatcher<CoberturaData>() {
+        TypeSafeMatcher<CoverageData> coberturaDataMatcher = new TypeSafeMatcher<CoverageData>() {
             @Override
-            protected boolean matchesSafely(CoberturaData coverable) {
+            protected boolean matchesSafely(CoverageData coverable) {
                 return true;
             }
 

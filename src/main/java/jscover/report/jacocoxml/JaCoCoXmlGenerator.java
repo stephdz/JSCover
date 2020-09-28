@@ -342,8 +342,8 @@ Public License instead of this License.
 
 package jscover.report.jacocoxml;
 
+import jscover.report.CoverageData;
 import jscover.report.SummaryData;
-import jscover.report.coberturaxml.CoberturaData;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -358,7 +358,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
 
 public class JaCoCoXmlGenerator {
-    public String generateXml(CoberturaData data, String id, long timeStamp) {
+    public String generateXml(CoverageData data, String id, long timeStamp) {
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
