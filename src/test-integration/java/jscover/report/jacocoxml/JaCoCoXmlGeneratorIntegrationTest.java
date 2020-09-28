@@ -3,7 +3,8 @@ package jscover.report.jacocoxml;
 import jscover.report.JSONDataMerger;
 import org.junit.Test;
 
-import static jscover.report.coberturaxml.CoberturaXmlGeneratorTest.parseXml;
+import static jscover.report.XmlTestHelper.parseXml;
+
 
 public class JaCoCoXmlGeneratorIntegrationTest {
     private JSONDataMerger jsonDataMerger = new JSONDataMerger();
