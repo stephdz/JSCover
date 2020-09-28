@@ -342,6 +342,7 @@ Public License instead of this License.
 
 package jscover.report.jacocoxml;
 
+import jscover.report.SummaryData;
 import jscover.report.coberturaxml.CoberturaData;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -357,15 +358,22 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
 
 public class JaCoCoXmlGenerator {
-    public String generateXml(CoberturaData data, String sourceDir, String version) {
+    public String generateXml(CoberturaData data, String id, long timeStamp) {
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document doc = documentBuilder.newDocument();
 
-            Element coverageElement = doc.createElement("report");
-            coverageElement.setAttribute("name", "JSCover JaCoCo XML - " + data.getUri());
-            doc.appendChild(coverageElement);
+            SummaryData summaryTotal = new SummaryData(data.getFiles());
+            Element report = doc.createElement("report");
+            report.setAttribute("name", "JSCover JaCoCo XML");
+            doc.appendChild(report);
+            Element sessioninfo = doc.createElement("sessioninfo");
+            sessioninfo.setAttribute("id", id);
+            String timeStampString = String.valueOf(timeStamp);
+            sessioninfo.setAttribute("start", timeStampString);
+            sessioninfo.setAttribute("dump", timeStampString);
+            report.appendChild(sessioninfo);
 
             return getXmlString(doc);
         } catch (Exception e) {
@@ -380,8 +388,10 @@ public class JaCoCoXmlGenerator {
         transformer.setOutputProperty(OutputKeys.METHOD, "xml");
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", Integer.toString(2));
-        transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "report.dtd");
-        //transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "report.dtd");
+        transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "-//JACOCO//DTD Report 1.1//EN");
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+
         StringWriter writer = new StringWriter();
         DOMSource xmlSource = new DOMSource(doc.getDocumentElement());
         transformer.transform(xmlSource, new StreamResult(writer));
