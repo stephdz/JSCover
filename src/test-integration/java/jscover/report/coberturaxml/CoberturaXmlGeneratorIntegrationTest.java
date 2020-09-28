@@ -346,16 +346,14 @@ import jscover.report.JSONDataMerger;
 import jscover.util.IoUtils;
 import org.junit.Test;
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import java.io.File;
-import java.io.IOException;
 
+import static jscover.report.XmlTestHelper.getXPath;
+import static jscover.report.XmlTestHelper.parseXml;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
@@ -461,13 +459,5 @@ public class CoberturaXmlGeneratorIntegrationTest {
         String conditionXPath = lineXPath + "/conditions/condition[@number='1']";
         assertThat(getXPath(xpath, document, conditionXPath + "/@coverage"), equalTo("50%"));
         assertThat(getXPath(xpath, document, conditionXPath + "/@type"), equalTo("jump"));
-    }
-
-    private Document parseXml(String xml) throws ParserConfigurationException, SAXException, IOException {
-        return CoberturaXmlGeneratorTest.parseXml(xml);
-    }
-
-    private String getXPath(XPath xpath, Document document, String expression) throws Exception {
-        return (String)xpath.evaluate(expression, document, XPathConstants.STRING);
     }
 }

@@ -345,22 +345,15 @@ package jscover.report.coberturaxml;
 import jscover.report.BranchData;
 import jscover.report.Coverable;
 import jscover.report.FileData;
-import jscover.util.LocalEntityResolver;
-import jscover.util.ReThrowingErrorHandler;
 import org.junit.Test;
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.*;
 
+import static jscover.report.XmlTestHelper.getXPath;
+import static jscover.report.XmlTestHelper.parseXml;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
@@ -574,19 +567,5 @@ public class CoberturaXmlGeneratorTest {
         assertThat(getXPath(xpath, document, "//condition/@coverage"), equalTo("0%"));
         assertThat(getXPath(xpath, document, "//condition/@number"), equalTo("1"));
         assertThat(getXPath(xpath, document, "//condition/@type"), equalTo("jump"));
-    }
-
-    public static Document parseXml(String xml) throws ParserConfigurationException, SAXException, IOException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setValidating(true);
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        builder.setEntityResolver(new LocalEntityResolver());
-        //Turn on line below when XML DTD validation will pass.
-        builder.setErrorHandler(new ReThrowingErrorHandler());
-        return builder.parse(new ByteArrayInputStream(xml.getBytes()));
-    }
-
-    private String getXPath(XPath xpath, Document document, String expression) throws Exception {
-        return (String)xpath.evaluate(expression, document, XPathConstants.STRING);
     }
 }

@@ -353,11 +353,11 @@ import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.util.Locale;
 
+import static jscover.report.XmlTestHelper.getXPath;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -393,9 +393,5 @@ public class XMLSummaryTest {
         assertThat(getXPath(xpath, document, "/coverage/@branches-covered"), equalTo("5"));
         assertThat(getXPath(xpath, document, "/coverage/@branches"), equalTo("4"));
         assertThat(getXPath(xpath, document, "/coverage/@version"), equalTo("theVersion"));
-    }
-
-    private String getXPath(XPath xpath, Document document, String expression) throws Exception {
-        return (String)xpath.evaluate(expression, document, XPathConstants.STRING);
     }
 }
